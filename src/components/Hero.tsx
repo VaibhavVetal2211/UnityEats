@@ -13,7 +13,7 @@ export const Hero = () => {
         <div className="relative z-10 text-center px-4">
           <div className="mb-6 animate-fade-up">
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-2 font-serif">
-              ShareAPlate
+              UnityEats
             </h1>
             <span className="text-xl md:text-2xl text-accent italic">Nourish • Connect • Share</span>
           </div>

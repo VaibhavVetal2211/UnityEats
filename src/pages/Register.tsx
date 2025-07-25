@@ -40,7 +40,7 @@ const Register = () => {
       <Card className="w-full max-w-md p-6 space-y-6 animate-fade-up">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
-          <p className="text-muted-foreground mt-2">Sign up for ShareAPlate</p>
+          <p className="text-muted-foreground mt-2">Sign up for UnityEats</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

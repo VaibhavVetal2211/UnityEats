@@ -17,7 +17,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <Heart className="h-6 w-6 text-primary" />
-            <span className="text-2xl font-bold text-primary">ShareAPlate</span>
+            <span className="text-2xl font-bold text-primary">UnityEats</span>
           </Link>
           
           <div className="hidden md:flex items-center space-x-6">
