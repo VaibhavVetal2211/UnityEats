@@ -1,6 +1,6 @@
-# ShareAPlate Backend
+# UnityEats Backend
 
-This is the backend for the ShareAPlate project.
+This is the backend for the UnityEats project.
 
 ## Tech Stack
 - Node.js (Express)

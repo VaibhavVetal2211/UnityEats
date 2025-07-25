@@ -28,12 +28,12 @@ app.use('/api/volunteer', require('./routes/volunteer'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'ShareAPlate backend is running.' });
+  res.json({ status: 'ok', message: 'UnityEats backend is running.' });
 });
 
 // MongoDB connection
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/shareaplate';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/UnityEats';
 
 
 mongoose.connect(MONGO_URI, {

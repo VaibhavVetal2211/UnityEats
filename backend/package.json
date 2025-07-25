@@ -1,7 +1,7 @@
 {
-  "name": "shareaplate-backend",
+  "name": "UnityEats-backend",
   "version": "1.0.0",
-  "description": "Backend for ShareAPlate project",
+  "description": "Backend for UnityEats project",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
