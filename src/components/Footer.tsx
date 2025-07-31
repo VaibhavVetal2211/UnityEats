@@ -9,7 +9,7 @@ export const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Heart className="h-6 w-6" />
-              <span className="text-2xl font-bold">ShareAPlate</span>
+              <span className="text-2xl font-bold">UnityEats</span>
             </div>
             <p className="text-sm opacity-90">
               Connecting surplus food with those who need it most. Join our mission to reduce food waste and help the community.
@@ -30,7 +30,7 @@ export const Footer = () => {
             <ul className="space-y-2">
               <li className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
-                <span>support@shareaplate.com</span>
+                <span>support@unityeats.com</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
@@ -59,7 +59,7 @@ export const Footer = () => {
         </div>
         
         <div className="mt-12 pt-8 border-t border-primary-foreground/20 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} ShareAPlate. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} UnityEats. All rights reserved.</p>
         </div>
       </div>
     </footer>
