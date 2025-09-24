@@ -76,7 +76,7 @@ const ClaimFood = () => {
         <div className="space-y-4">
           {food.image && (
             <img
-              src={food.image.startsWith('/uploads') ? `http://localhost:5000${food.image}` : food.image}
+              src={food.image.startsWith('http') ? food.image : food.image.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${food.image}` : food.image}
               alt={food.title}
               className="w-full h-64 object-cover rounded mb-4"
             />

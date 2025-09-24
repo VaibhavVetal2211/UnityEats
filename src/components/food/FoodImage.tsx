@@ -39,11 +39,17 @@ export const FoodImage = ({
 
   const fallbackImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
 
-  // Fix: prepend backend URL if image is a relative /uploads path
+  // Handle both local uploads and Cloudinary URLs
   const getImageUrl = (img: string) => {
     if (!img) return fallbackImage;
+    // If it's a Cloudinary URL (starts with http), return as is
+    if (img.startsWith('http')) {
+      return img;
+    }
+    // If it's a local upload path, prepend backend URL
     if (img.startsWith('/uploads')) {
-      return `http://localhost:5000${img}`;
+      const apiUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+      return `${apiUrl}${img}`;
     }
     return img;
   };

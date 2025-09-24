@@ -1,0 +1,30 @@
+services:
+  # Backend API Service
+  - type: web
+    name: unityeats-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false
+        # You'll need to set this manually in Render dashboard
+    healthCheckPath: /api/health
+    disk:
+      name: uploads
+      mountPath: /opt/render/project/src/backend/uploads
+      sizeGB: 1
+
+databases:
+  # Optional: If you want to use Render's managed MongoDB
+  # - name: unityeats-mongodb
+  #   databaseName: UnityEats
+  #   user: unityeats-user
+  #   plan: free
