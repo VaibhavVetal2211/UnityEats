@@ -26,7 +26,7 @@ const allowedOrigins = [
   'http://127.0.0.1:8080',
   'http://[::1]:8080',
   'http://[::1]:5173',
-  // Production origins (will be added after deployment)
+  // Production origins
   'https://*.netlify.app',
   'https://*.onrender.com'
 ];
