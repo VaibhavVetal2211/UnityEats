@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -16,11 +17,7 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const res = await api.register({ name, email, password });
       const data = await res.json();
       if (res.ok) {
         toast.success("Registration successful! Please log in.");

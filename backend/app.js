@@ -58,11 +58,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Debug middleware to see incoming requests
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url} - Origin: ${req.headers.origin}`);
-  next();
-});
+// Debug middleware (can be removed in production)
+// app.use((req, res, next) => {
+//   console.log(`${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+//   next();
+// });
 
 app.use(express.json({ limit: '10mb' })); // Increase limit for image uploads
 app.use('/uploads', express.static(uploadsDir));

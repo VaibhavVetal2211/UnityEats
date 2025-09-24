@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Package, Clock, MapPin, Phone, Camera, AlertCircle } from "lucide-react";
+import { api } from "@/lib/api";
 
 const Donate = () => {
   const { toast } = useToast();
@@ -13,13 +14,7 @@ const Donate = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     try {
-      const res = await fetch("/api/food", {
-        method: "POST",
-        headers: {
-          ...(localStorage.getItem("token") && { "Authorization": `Bearer ${localStorage.getItem("token")}` })
-        },
-        body: formData,
-      });
+      const res = await api.createFoodListing(formData);
       if (res.ok) {
         toast({
           title: "Donation Posted",
