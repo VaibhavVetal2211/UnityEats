@@ -21,6 +21,7 @@ const Login = () => {
       const data = await res.json();
       if (res.ok && data.token) {
         localStorage.setItem("token", data.token);
+        console.log(data.token);
         toast.success("Login successful!");
         navigate("/");
       } else {

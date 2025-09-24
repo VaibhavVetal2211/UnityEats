@@ -3,24 +3,35 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 export const apiCall = async (endpoint: string, options: RequestInit = {}) => {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
-  
-  const defaultOptions: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+
+  // Start with default headers
+  let headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string> | undefined),
   };
 
   // Add authorization header if token exists
   const token = localStorage.getItem('token');
   if (token) {
-    defaultOptions.headers = {
-      ...defaultOptions.headers,
-      'Authorization': `Bearer ${token}`,
+    headers = {
+      ...headers,
+      Authorization: `Bearer ${token}`,
     };
   }
 
-  return fetch(url, { ...defaultOptions, ...options });
+  // If sending FormData, let the browser set the Content-Type with boundary
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+  if (isFormData) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete headers['Content-Type'];
+  }
+
+  const finalOptions: RequestInit = {
+    ...options,
+    headers,
+  };
+
+  return fetch(url, finalOptions);
 };
 
 export const api = {
