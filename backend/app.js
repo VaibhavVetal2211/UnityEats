@@ -28,8 +28,10 @@ const allowedOrigins = [
   'http://[::1]:5173',
   // Production origins
   'https://*.netlify.app',
-  'https://*.onrender.com'
-];
+  'https://*.onrender.com',
+  // Add your specific Netlify URL here after deployment
+  process.env.FRONTEND_URL
+].filter(Boolean); // Remove undefined values
 
 app.use(cors({
   origin: function (origin, callback) {
