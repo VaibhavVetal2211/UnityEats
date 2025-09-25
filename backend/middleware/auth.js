@@ -1,41 +1,24 @@
 const jwt = require('jsonwebtoken');
 
+/**
+ * Authentication middleware for UnityEats
+ * Expects token in Authorization header as: Bearer <token>
+ * This matches the frontend implementation in src/lib/api.ts
+ */
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
-  const xAccessToken = req.headers['x-access-token'];
-  const queryToken = req.query && (req.query.token || req.query.access_token);
-  const cookieHeader = req.headers.cookie;
-
-  let token = null;
   
-  // Authorization header: Bearer <token> OR raw token
-  if (authHeader) {
-    const parts = String(authHeader).split(' ');
-    if (parts.length === 2 && /^Bearer$/i.test(parts[0])) {
-      token = parts[1];
-    } else {
-      token = String(authHeader).trim();
-    }
+  if (!authHeader) {
+    return res.status(401).json({ message: 'No authorization header provided' });
   }
 
-  // x-access-token header
-  if (!token && xAccessToken) {
-    token = String(xAccessToken).trim();
+  // Extract Bearer token from Authorization header
+  const parts = authHeader.split(' ');
+  if (parts.length !== 2 || parts[0] !== 'Bearer') {
+    return res.status(401).json({ message: 'Invalid authorization format. Expected: Bearer <token>' });
   }
 
-  // token/access_token in query (useful for tests)
-  if (!token && queryToken) {
-    token = String(queryToken).trim();
-  }
-
-  // token cookie
-  if (!token && cookieHeader) {
-    const match = cookieHeader.match(/(?:^|; )token=([^;]+)/);
-    if (match) {
-      token = decodeURIComponent(match[1]);
-    }
-  }
-
+  const token = parts[1];
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
   }
