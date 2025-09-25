@@ -3,11 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import LogoutButton from "@/components/ui/logout-button";
 
 const Profile = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -67,18 +66,6 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem("token");
-      toast({ title: "Logged out" });
-    } catch (_) {}
-    // Ensure Navbar reflects auth state; navigate home and refresh
-    navigate("/");
-    setTimeout(() => {
-      window.location.reload();
-    }, 50);
-  };
-
   if (loading) return <div className="container mx-auto px-4 py-8">Loading...</div>;
   if (!user) return <div className="container mx-auto px-4 py-8">User not found.</div>;
 
@@ -86,9 +73,6 @@ const Profile = () => {
     <div className="container mx-auto px-4 py-8">
       <Card className="max-w-2xl mx-auto p-6 space-y-6 animate-fade-up">
         <h1 className="text-2xl font-bold mb-4 text-primary">My Profile</h1>
-        <div className="flex justify-end">
-          <Button variant="outline" onClick={handleLogout}>Logout</Button>
-        </div>
         {editMode ? (
           <form onSubmit={handleSave} className="space-y-4">
             <div>
@@ -122,7 +106,10 @@ const Profile = () => {
               <span className="font-medium">Role:</span>
               <span>{user.role}</span>
             </div>
-            <Button className="mt-4" onClick={handleEdit}>Edit Profile</Button>
+            <div className="flex gap-2 mt-4">
+              <Button onClick={handleEdit}>Edit Profile</Button>
+              <LogoutButton />
+            </div>
           </div>
         )}
       </Card>

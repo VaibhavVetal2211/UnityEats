@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, Heart, User, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Sheet,
@@ -10,16 +10,28 @@ import {
 
 export const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = () => setIsLoggedIn(!!localStorage.getItem("token"));
-    checkAuth();
-    // respond to token changes across tabs
-    const handler = () => checkAuth();
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
+    const checkToken = () => {
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token);
+    };
+    checkToken();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "token") {
+        checkToken();
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
+
+  const handleProfileClick = async () => {
+    // Navigate to profile; the page will call the profile API and display info
+    navigate("/profile");
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,13 +53,11 @@ export const Navbar = () => {
             <Link to="/volunteer" className="text-foreground hover:text-primary transition-colors">
               Volunteer
             </Link>
-            {isLoggedIn ? (
-              <Link to="/profile">
-                <Button variant="outline" className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span>Profile</span>
-                </Button>
-              </Link>
+            {isAuthenticated ? (
+              <Button variant="outline" className="flex items-center space-x-2" onClick={handleProfileClick}>
+                <User className="h-4 w-4" />
+                <span>Profile</span>
+              </Button>
             ) : (
               <Link to="/login">
                 <Button variant="outline" className="flex items-center space-x-2">
@@ -72,21 +82,12 @@ export const Navbar = () => {
                 </Link>
                 <Link to="/donate" className="text-lg">Donate</Link>
                 <Link to="/volunteer" className="text-lg">Volunteer</Link>
-                {isLoggedIn ? (
-                  <Link to="/profile">
-                    <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
-                      <User className="h-5 w-5" />
-                      <span>Profile</span>
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link to="/login">
-                    <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
-                      <User className="h-5 w-5" />
-                      <span>Login</span>
-                    </Button>
-                  </Link>
-                )}
+                <Link to="/login">
+                  <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
+                    <User className="h-5 w-5" />
+                    <span>Login</span>
+                  </Button>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>

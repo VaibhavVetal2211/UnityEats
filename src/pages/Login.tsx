@@ -21,6 +21,10 @@ const Login = () => {
       const data = await res.json();
       if (res.ok && data.token) {
         localStorage.setItem("token", data.token);
+        // Notify other parts of the app (including Navbar) about auth change
+        try {
+          window.dispatchEvent(new StorageEvent("storage", { key: "token", newValue: data.token } as any));
+        } catch {}
         console.log(data.token);
         toast.success("Login successful!");
         navigate("/");
