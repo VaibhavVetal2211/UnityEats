@@ -44,9 +44,20 @@ const ClaimFood = () => {
         });
         navigate(`/checkout/${claim._id}`);
       } else {
+        // Provide more specific feedback based on server message/status
+        const data = await res.json().catch(() => ({}));
+        const serverMessage = data?.message || "Failed to claim food.";
+        let title = "Error";
+        if (res.status === 400 && /not available/i.test(serverMessage)) {
+          title = "Already Claimed";
+        } else if (res.status === 403 && /own donation/i.test(serverMessage)) {
+          title = "Not Allowed";
+        } else if (res.status === 401) {
+          title = "Authentication Required";
+        }
         toast({
-          title: "Error",
-          description: "Failed to claim food.",
+          title,
+          description: serverMessage,
           variant: "destructive",
         });
       }

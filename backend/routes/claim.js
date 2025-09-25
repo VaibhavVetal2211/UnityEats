@@ -44,16 +44,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// Update claim (status, pickup info)
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const update = req.body;
-    const claim = await Claim.findByIdAndUpdate(req.params.id, update, { new: true });
-    if (!claim) return res.status(404).json({ message: 'Not found' });
-    res.json(claim);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
-});
+// Update claim status (approved/completed/cancelled) with transactional sync
+router.put('/:id/status', auth, claimController.updateClaimStatus);
 
 module.exports = router; 

@@ -34,31 +34,42 @@ const Checkout = () => {
     if (!id) return;
     setSubmitting(true);
     try {
-      // Optionally, update claim status and store pickup info
-      const res = await fetch(`/api/claim/${id}`, {
+      // Step 1: move pending -> approved
+      const approveRes = await fetch(`/api/claim/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           ...(localStorage.getItem("token") && { "Authorization": `Bearer ${localStorage.getItem("token")}` })
         },
-        body: JSON.stringify({
-          status: "completed",
-          fullName,
-          email,
-          phone,
-          pickupTime,
-        }),
+        body: JSON.stringify({ status: "approved" }),
       });
-      if (res.ok) {
+      if (!approveRes.ok) {
+        const data = await approveRes.json().catch(() => ({}));
+        toast({ title: "Error", description: data?.message || "Failed to approve claim.", variant: "destructive" });
+        setSubmitting(false);
+        return;
+      }
+
+      // Step 2: move approved -> completed
+      const completeRes = await fetch(`/api/claim/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(localStorage.getItem("token") && { "Authorization": `Bearer ${localStorage.getItem("token")}` })
+        },
+        body: JSON.stringify({ status: "completed" }),
+      });
+      if (completeRes.ok) {
         toast({
           title: "Order Confirmed",
           description: "Your order has been placed successfully!",
         });
         navigate(`/receipt/${id}`);
       } else {
+        const data = await completeRes.json().catch(() => ({}));
         toast({
           title: "Error",
-          description: "Failed to confirm order.",
+          description: data?.message || "Failed to confirm order.",
           variant: "destructive",
         });
       }

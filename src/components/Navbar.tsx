@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, Heart, User, Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,6 +10,16 @@ import {
 
 export const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkAuth = () => setIsLoggedIn(!!localStorage.getItem("token"));
+    checkAuth();
+    // respond to token changes across tabs
+    const handler = () => checkAuth();
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -31,12 +41,21 @@ export const Navbar = () => {
             <Link to="/volunteer" className="text-foreground hover:text-primary transition-colors">
               Volunteer
             </Link>
-            <Link to="/login">
-              <Button variant="outline" className="flex items-center space-x-2">
-                <User className="h-4 w-4" />
-                <span>Login</span>
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link to="/profile">
+                <Button variant="outline" className="flex items-center space-x-2">
+                  <User className="h-4 w-4" />
+                  <span>Profile</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button variant="outline" className="flex items-center space-x-2">
+                  <User className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
+              </Link>
+            )}
           </div>
           
           <Sheet>
@@ -53,12 +72,21 @@ export const Navbar = () => {
                 </Link>
                 <Link to="/donate" className="text-lg">Donate</Link>
                 <Link to="/volunteer" className="text-lg">Volunteer</Link>
-                <Link to="/login">
-                  <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
-                    <User className="h-5 w-5" />
-                    <span>Login</span>
-                  </Button>
-                </Link>
+                {isLoggedIn ? (
+                  <Link to="/profile">
+                    <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
+                      <User className="h-5 w-5" />
+                      <span>Profile</span>
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <Button variant="outline" className="w-full flex items-center justify-center space-x-2">
+                      <User className="h-5 w-5" />
+                      <span>Login</span>
+                    </Button>
+                  </Link>
+                )}
               </div>
             </SheetContent>
           </Sheet>
