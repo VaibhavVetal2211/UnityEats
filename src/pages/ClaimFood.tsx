@@ -11,6 +11,19 @@ const ClaimFood = () => {
   const [food, setFood] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  const fallbackImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+
+  const getImageUrl = (img: string) => {
+    if (!img) return fallbackImage;
+    if (img.startsWith('http')) return img;
+    if (img.startsWith('/uploads')) {
+      const apiUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+      return `${apiUrl}${img}`;
+    }
+    return img;
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -85,13 +98,13 @@ const ClaimFood = () => {
       <Card className="max-w-2xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4">Claim Food Item</h1>
         <div className="space-y-4">
-          {food.image && (
-            <img
-              src={food.image.startsWith('http') ? food.image : food.image.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${food.image}` : food.image}
-              alt={food.title}
-              className="w-full h-64 object-cover rounded mb-4"
-            />
-          )}
+          <img
+            src={imageError ? fallbackImage : getImageUrl(food.image)}
+            alt={food.title}
+            className="w-full h-64 object-cover rounded mb-4"
+            onError={() => setImageError(true)}
+            loading="lazy"
+          />
           <div className="flex justify-between items-center">
             <span className="font-medium">Item:</span>
             <span>{food.title}</span>
