@@ -16,6 +16,8 @@ services:
       - key: MONGO_URI
         sync: false
         # You'll need to set this manually in Render dashboard
+      - key: FRONTEND_URL
+        value: https://unityeats-frontend.onrender.com
     healthCheckPath: /api/health
     disk:
       name: uploads

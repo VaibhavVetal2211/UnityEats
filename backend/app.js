@@ -13,8 +13,6 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
-// Simple CORS configuration for development
-
 // CORS configuration for both development and production
 const allowedOrigins = [
   // Development origins
@@ -28,8 +26,7 @@ const allowedOrigins = [
   'http://[::1]:5173',
   // Production origins
   'https://*.netlify.app',
-  'https://*.onrender.com',
-  // Add your specific Netlify URL here after deployment
+  // Allow specific Render and custom frontend URL via env
   process.env.FRONTEND_URL
 ].filter(Boolean); // Remove undefined values
 
@@ -66,7 +63,24 @@ const allowedOrigins = [
 // });
 
 
-app.use(cors('*'));
+// Strict CORS: allow only whitelisted origins
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    const isAllowed = allowedOrigins.some((allowedOrigin) => {
+      if (allowedOrigin.includes('*')) {
+        return origin.endsWith(allowedOrigin.replace('*', ''));
+      }
+      return allowedOrigin === origin;
+    });
+    if (isAllowed) return callback(null, true);
+    console.log('CORS blocked origin:', origin);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use(express.json({ limit: '10mb' })); // Increase limit for image uploads
 app.use('/uploads', express.static(uploadsDir));
