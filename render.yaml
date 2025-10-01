@@ -22,6 +22,18 @@ services:
       mountPath: /opt/render/project/src/backend/uploads
       sizeGB: 1
 
+  # Frontend Service
+  - type: web
+    name: unityeats-frontend
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://unityeats-backend.onrender.com/api
+        # Update this URL to match your actual backend URL on Render
+
 databases:
   # Optional: If you want to use Render's managed MongoDB
   # - name: unityeats-mongodb
